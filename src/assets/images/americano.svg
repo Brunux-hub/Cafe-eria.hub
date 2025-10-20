@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <rect width="800" height="450" fill="#2b6cb0"/>
+  <rect x="220" y="150" width="360" height="160" rx="20" fill="#63b3ed"/>
+  <text x="40" y="410" fill="#ffffff" font-family="Segoe UI, Roboto, Arial" font-size="28" font-weight="700">Americano</text>
+</svg>

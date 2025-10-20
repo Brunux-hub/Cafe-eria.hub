@@ -1,0 +1,81 @@
+<div class="promotions-wrapper">
+	<div class="flex items-center justify-between mb-4">
+		<h2 class="text-lg font-semibold">Gestión de Promociones</h2>
+		<div>
+			<button (click)="toggleNewPromotion(true)" class="bg-black text-white px-4 py-2 rounded shadow">+ Nueva Promoción</button>
+		</div>
+	</div>
+
+	<div class="promotions-card bg-white rounded-lg shadow p-4">
+		<ul>
+			<li *ngFor="let p of promotions" class="border-b py-3 flex justify-between items-center">
+				<div>
+					<div class="font-semibold">{{ p.title }}</div>
+					<div class="text-sm text-gray-500">{{ p.description }}</div>
+				</div>
+				<div>
+					<span class="px-3 py-1 rounded-full" [class.bg-green-100]="p.active">{{ p.active ? 'Activa' : 'Inactiva' }}</span>
+				</div>
+			</li>
+		</ul>
+	</div>
+
+	<!-- Modal new promotion -->
+	<div *ngIf="showNewPromotion" class="promo-modal-overlay">
+		<div class="promo-modal">
+			<button class="promo-close" (click)="toggleNewPromotion(false)">✖</button>
+			<h3 class="promo-title">Nueva Promoción</h3>
+
+			<form [formGroup]="newPromotionForm" (ngSubmit)="submitNewPromotion()" class="promo-form">
+				<div class="form-group">
+					<label class="label">Nombre de la Promoción *</label>
+					<input formControlName="title" placeholder="Ej: Descuento de Temporada" class="form-control" />
+				</div>
+
+				<div class="form-group">
+					<label class="label">Descripción</label>
+					<textarea formControlName="description" placeholder="Descripción de la promoción" class="form-control h-20"></textarea>
+				</div>
+
+				<div class="form-group">
+					<label class="label">Descuento (%) *</label>
+					<input formControlName="discount" type="number" class="form-control" />
+				</div>
+
+				<div class="grid-cols-2 grid gap-3">
+					<div class="form-group">
+						<label class="label">Fecha Inicio *</label>
+						<input type="date" class="form-control" />
+					</div>
+					<div class="form-group">
+						<label class="label">Fecha Fin *</label>
+						<input type="date" class="form-control" />
+					</div>
+				</div>
+
+				<div class="form-group inline-toggle">
+					<label class="label">Promoción Activa</label>
+					<label class="switch">
+						<input type="checkbox" formControlName="active" />
+						<span class="slider"></span>
+					</label>
+				</div>
+
+				<div class="form-group">
+					<label class="label">Productos Aplicables</label>
+					<div class="products-select">
+						<label *ngFor="let prod of products" class="prod-row">
+							<input type="checkbox" [value]="prod.id" (change)="onToggleProduct(prod.id, $any($event.target).checked)" />
+							<span class="prod-label">{{ prod.name }} - ${{ prod.price.toFixed(2) }}</span>
+						</label>
+					</div>
+				</div>
+
+				<div class="form-actions">
+					<button type="button" class="btn btn-secondary" (click)="toggleNewPromotion(false)">Cancelar</button>
+					<button type="submit" class="btn btn-primary" [disabled]="newPromotionForm.invalid">Crear</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,17 @@
+/* Login/Register styles */
+.social-btn { padding: 12px 16px; border-radius: 999px; border: 1px solid #e6e6e8; background: white; }
+.social-google { color: #111; }
+.social-fb { background: #335ea8; color: #fff; }
+.divider { text-align:center; color:#9ca3af; margin: 12px 0; position:relative; }
+.divider::before, .divider::after { content: ''; height:1px; background:#e6e6e8; position:absolute; top:50%; width:38%; }
+.divider::before { left:0; }
+.divider::after { right:0; }
+.divider span { background:#fff; padding:0 10px; position:relative; z-index:1; }
+.green-btn { background:#0e8b3a; color:white; padding:12px; border-radius:8px; font-weight:700; }
+.form-control { width:100%; padding:10px 12px; border-radius:8px; background:#f6f6f7; border:1px solid #eee; }
+.register-card { background:#fff7ed; padding:18px; border-radius:12px; }
+.btn { padding:10px 16px; border-radius:8px; }
+.btn-primary { background:#0b0b0f; color:#fff; }
+.btn-secondary { background:#fff; border:1px solid #e6e6e8; }
+
+.register-link-btn { background: transparent; border: none; color: #0b0b0f; text-decoration: underline; }

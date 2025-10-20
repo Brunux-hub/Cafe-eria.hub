@@ -1,0 +1,43 @@
+<div class="products-wrapper">
+	<div class="products-inner">
+					<div class="flex items-center justify-between mb-4">
+						<h2 class="text-lg font-semibold">Gestión de Productos</h2>
+						<div class="header-actions">
+							<button (click)="openNewProduct()" class="new-product-btn bg-gradient-to-r from-amber-600 to-orange-600 text-white font-semibold py-2 px-4 rounded-lg shadow flex items-center gap-2"> <span>+</span> Nuevo Producto</button>
+						</div>
+					</div>
+			<div class="products-card bg-white rounded-lg shadow p-4">
+				<!-- button moved to the header for proper alignment -->
+				<div *ngIf="products$ | async as products">
+				<table class="products-table">
+					<thead>
+						<tr class="text-sm">
+							<th>Imagen</th>
+							<th>Nombre</th>
+							<th>Categoría</th>
+							<th>Precio</th>
+							<th>Stock</th>
+							<th class="actions-col">Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let p of products" class="border-b">
+							<td><img [src]="p.image" alt="{{p.name}}" class="product-image" /></td>
+							<td>
+								<div class="product-name">{{ p.name }}</div>
+								<div class="product-desc">{{ p.description }}</div>
+							</td>
+							<td>{{ p.category }}</td>
+							<td>${{ p.price.toFixed(2) }}</td>
+							<td>{{ p.stock }}</td>
+							<td class="actions-col">
+								<button class="action-btn edit" (click)="editProduct(p)" title="Editar">✎</button>
+								<button class="action-btn delete" (click)="deleteProduct(p)" title="Eliminar">🗑️</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

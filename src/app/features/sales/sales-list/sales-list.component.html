@@ -1,0 +1,51 @@
+<div class="sales-wrapper">
+	<div class="kpi-row grid grid-cols-4 gap-4 mb-6">
+		<div class="kpi-card bg-white p-4 rounded shadow">
+			<div class="text-sm text-gray-500">Total Ventas</div>
+			<div class="text-2xl font-semibold">${{ totalSales.toFixed(2) }}</div>
+			<div class="text-xs text-gray-400">{{ transactions }} transacciones</div>
+		</div>
+		<div class="kpi-card bg-white p-4 rounded shadow">
+			<div class="text-sm text-gray-500">Productos Vendidos</div>
+			<div class="text-2xl font-semibold">{{ productsSold }}</div>
+		</div>
+		<div class="kpi-card bg-white p-4 rounded shadow">
+			<div class="text-sm text-gray-500">Promedio por Venta</div>
+			<div class="text-2xl font-semibold">${{ avgPerSale.toFixed(2) }}</div>
+		</div>
+		<div class="kpi-card bg-white p-4 rounded shadow">
+			<div class="text-sm text-gray-500">Descuentos</div>
+			<div class="text-2xl font-semibold">${{ discounts.toFixed(2) }}</div>
+		</div>
+	</div>
+
+	<div class="history-card bg-white rounded shadow p-4">
+		<h3 class="text-md font-semibold mb-3">Historial de Ventas</h3>
+		<table class="w-full text-left">
+			<thead>
+				<tr class="text-sm text-gray-500 border-b">
+					<th class="py-3">ID</th>
+					<th class="py-3">Cliente</th>
+					<th class="py-3">Fecha</th>
+					<th class="py-3">Productos</th>
+					<th class="py-3">Descuento</th>
+					<th class="py-3">Total</th>
+					<th class="py-3">Estado</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let s of sales" class="border-b">
+					<td class="py-3">{{ s.id }}</td>
+					<td class="py-3">{{ s.customer }}</td>
+					<td class="py-3">{{ s.date }}</td>
+					<td class="py-3">
+						<div *ngFor="let p of s.products">{{ p }}</div>
+					</td>
+					<td class="py-3 text-green-600">{{ s.discount | currency:'USD': 'symbol':'1.2-2' }}</td>
+					<td class="py-3">${{ s.total.toFixed(2) }}</td>
+					<td class="py-3"><span class="status-pill bg-black text-white px-3 py-1 rounded-full text-xs">{{ s.status }}</span></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

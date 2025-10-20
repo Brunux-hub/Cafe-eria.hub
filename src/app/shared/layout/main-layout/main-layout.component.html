@@ -1,0 +1,82 @@
+<app-navbar></app-navbar>
+
+<div class="container mx-auto px-6 py-6 grid grid-cols-12 gap-6">
+	<!-- Sidebar -->
+	<aside class="col-span-3">
+		<div class="bg-white rounded-lg p-4 shadow">
+			<nav class="flex flex-col gap-2">
+				<a routerLink="/admin/products" class="px-3 py-2 rounded hover:bg-gray-100 flex items-center gap-3">
+					<span class="w-8 h-8 bg-amber-100 rounded flex items-center justify-center">📦</span>
+					<span>Productos</span>
+				</a>
+				<a routerLink="/admin/sales" class="px-3 py-2 rounded hover:bg-gray-100 flex items-center gap-3">
+					<span class="w-8 h-8 bg-amber-100 rounded flex items-center justify-center">💳</span>
+					<span>Ventas</span>
+				</a>
+				<a routerLink="/admin/promotions" class="px-3 py-2 rounded hover:bg-gray-100 flex items-center gap-3">
+					<span class="w-8 h-8 bg-amber-100 rounded flex items-center justify-center">🏷️</span>
+					<span>Promociones</span>
+				</a>
+			</nav>
+		</div>
+	</aside>
+
+	<!-- Main content -->
+	<main class="col-span-9">
+		<!-- top tabs removed (duplicate navbar) -->
+		<div class="flex items-center justify-between mb-4">
+			<div></div>
+		</div>
+
+		<div class="bg-white rounded-lg shadow p-6">
+			<router-outlet></router-outlet>
+		</div>
+	</main>
+
+	<!-- Modal: Nuevo Producto -->
+	<div *ngIf="showNewProductModal" class="promo-modal-overlay">
+		<div class="promo-modal promo-product-modal">
+			<button class="promo-close" (click)="toggleNewProductModal(false)">✖</button>
+			<h3 class="promo-title">{{ editingProductId ? 'Editar Producto' : 'Nuevo Producto' }}</h3>
+
+			<form [formGroup]="newProductForm" (ngSubmit)="submitNewProduct()" class="promo-form">
+				<div class="form-group">
+					<label class="label">Nombre *</label>
+					<input formControlName="name" placeholder="Ej: Cappuccino" class="form-control" />
+				</div>
+
+				<div class="form-group">
+					<label class="label">Descripción</label>
+					<textarea formControlName="description" placeholder="Descripción del producto" class="form-control h-20"></textarea>
+				</div>
+
+				<div class="grid grid-cols-2 gap-4">
+					<div>
+						<label class="label">Precio ($) *</label>
+						<input type="number" formControlName="price" class="form-control" />
+					</div>
+					<div>
+						<label class="label">Stock *</label>
+						<input type="number" formControlName="stock" class="form-control" />
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="label">Categoría *</label>
+					<input formControlName="category" placeholder="Ej: Café Caliente" class="form-control" />
+				</div>
+
+				<div class="form-group">
+					<label class="label">URL de Imagen</label>
+					<input formControlName="imageUrl" placeholder="https://..." class="form-control" />
+				</div>
+
+				<div class="form-actions">
+					<button type="button" class="btn btn-secondary" (click)="toggleNewProductModal(false)">Cancelar</button>
+					<button type="submit" class="btn btn-primary" [disabled]="newProductForm.invalid">{{ editingProductId ? 'Guardar' : 'Crear' }}</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+</div>

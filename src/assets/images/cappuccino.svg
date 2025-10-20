@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <rect width="800" height="450" fill="#4a5568"/>
+  <circle cx="620" cy="120" r="70" fill="#718096"/>
+  <rect x="200" y="140" width="380" height="180" rx="24" fill="#a0aec0"/>
+  <text x="40" y="410" fill="#ffffff" font-family="Segoe UI, Roboto, Arial" font-size="28" font-weight="700">Cappuccino</text>
+</svg>

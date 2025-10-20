@@ -1,0 +1,80 @@
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 to-orange-100">
+  <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
+    <!-- Logo -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-amber-500 to-orange-600 rounded-full mb-4">
+        <img src="assets/icons/coffee.svg" class="w-10 h-10 text-white" alt="logo" />
+      </div>
+      <h1 class="text-3xl font-bold text-gray-800">Cafetería Soma</h1>
+    </div>
+
+    <!-- If registering, show register card; otherwise show login view -->
+    <div *ngIf="!showRegister">
+      <h2 class="text-2xl font-bold text-center mb-2">Iniciar sesión</h2>
+      <p class="text-center text-sm mb-4">¿No cuenta con una cuenta? <a class="text-green-600 font-semibold cursor-pointer" (click)="toggleRegister(true)">Regístrate</a></p>
+
+      <div class="space-y-3">
+        <button class="social-btn social-google w-full flex items-center gap-3 justify-center">
+          <img src="assets/icons/google.svg" alt="google" class="h-5" /> Continuar con Google
+        </button>
+        <button class="social-btn social-fb w-full flex items-center gap-3 justify-center">
+          <img src="assets/icons/facebook.svg" alt="fb" class="h-4" /> Continuar con Facebook
+        </button>
+
+        <div class="divider"><span>O continua con email</span></div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <input formControlName="username" placeholder="Email" class="form-control" />
+          </div>
+          <div class="mb-2">
+            <input type="password" formControlName="password" placeholder="Contraseña" class="form-control" />
+          </div>
+          <div class="text-right mb-3"><a class="text-sm text-gray-600">¿Olvidaste tu contraseña?</a></div>
+
+          <button type="submit" class="green-btn w-full">Ingresar</button>
+        </form>
+      </div>
+    </div>
+
+    <div *ngIf="showRegister" class="register-card">
+      <h3 class="text-lg font-semibold mb-2">Crear Cuenta Nueva</h3>
+      <p class="text-sm text-gray-500 mb-4">Regístrate como cliente</p>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+        <div class="mb-3"><input formControlName="fullName" placeholder="Nombre Completo" class="form-control" /></div>
+        <div *ngIf="registerForm.get('fullName')?.touched && registerForm.get('fullName')?.errors" class="text-sm text-red-600">Nombre requerido.</div>
+        <div class="mb-3"><input formControlName="email" placeholder="Email" class="form-control" /></div>
+        <div *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.errors" class="text-sm text-red-600">
+          <span *ngIf="registerForm.get('email')?.errors?.['required']">Email requerido.</span>
+          <span *ngIf="registerForm.get('email')?.errors?.['email']">Formato de email inválido.</span>
+        </div>
+        <div class="grid grid-cols-2 gap-3 mb-3">
+          <input type="password" formControlName="password" placeholder="Contraseña" class="form-control" />
+          <input type="password" formControlName="confirm" placeholder="Confirmar" class="form-control" />
+        </div>
+        <div *ngIf="(registerForm.get('password')?.touched && registerForm.get('password')?.errors) || (registerForm.get('confirm')?.touched && registerForm.get('confirm')?.errors)" class="text-sm text-red-600">
+          <div *ngIf="registerForm.get('password')?.errors?.['required']">Contraseña requerida.</div>
+          <div *ngIf="registerForm.get('password')?.errors?.['minlength']">Contraseña muy corta (mínimo 6 caracteres).</div>
+        </div>
+  <div *ngIf="registerForm.errors && registerForm.errors['mismatch'] && (registerForm.get('confirm')?.touched || registerForm.get('password')?.touched)" class="text-sm text-red-600">Las contraseñas no coinciden.</div>
+        <div class="mb-3"><input formControlName="phone" placeholder="Teléfono" class="form-control" /></div>
+        <div class="mb-3"><input formControlName="address" placeholder="Dirección" class="form-control" /></div>
+
+        <div class="flex gap-3">
+          <button type="button" class="btn btn-secondary" (click)="toggleRegister(false)">Cancelar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="registerLoading || registerForm.invalid">Registrarse</button>
+        </div>
+        <div *ngIf="registerForm.invalid && registerForm.touched" class="text-sm text-red-600 mt-2">Por favor verifica los campos requeridos y el formato del email.</div>
+        <p *ngIf="registerMessage" class="text-sm text-green-700 mt-3">{{ registerMessage }}</p>
+      </form>
+    </div>
+
+    <!-- Credenciales de prueba -->
+    <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+      <p class="text-sm text-blue-800 font-semibold mb-2">🔐 Credenciales de prueba:</p>
+      <p class="text-sm text-blue-700">Usuario: <code class="bg-blue-100 px-2 py-1 rounded">admin</code></p>
+      <p class="text-sm text-blue-700">Contraseña: <code class="bg-blue-100 px-2 py-1 rounded">admin123</code></p>
+    </div>
+  </div>
+</div>

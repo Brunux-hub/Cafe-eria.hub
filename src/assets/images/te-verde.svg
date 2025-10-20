@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <rect width="800" height="450" fill="#38a169"/>
+  <rect x="180" y="120" width="440" height="210" rx="30" fill="#68d391"/>
+  <text x="40" y="410" fill="#ffffff" font-family="Segoe UI, Roboto, Arial" font-size="28" font-weight="700">Té Verde</text>
+</svg>

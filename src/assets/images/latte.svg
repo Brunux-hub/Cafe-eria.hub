@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <rect width="800" height="450" fill="#f6ad55"/>
+  <rect x="180" y="120" width="440" height="210" rx="30" fill="#fbd38d"/>
+  <text x="40" y="410" fill="#1a202c" font-family="Segoe UI, Roboto, Arial" font-size="28" font-weight="700">Latte</text>
+</svg>

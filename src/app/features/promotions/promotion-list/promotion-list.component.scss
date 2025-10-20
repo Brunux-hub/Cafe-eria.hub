@@ -1,0 +1,72 @@
+:host { display: block; }
+.promotions-card { margin-top: 0.5rem; }
+
+/* Modal styles to match design */
+.promo-modal-overlay {
+	position: fixed;
+	inset: 0;
+	background: rgba(0,0,0,0.45);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 9999;
+}
+.promo-modal {
+	width: 100%;
+	max-width: 520px;
+	background: #fff;
+	border-radius: 10px;
+	padding: 20px 24px 22px 24px;
+	box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+	position: relative;
+}
+.promo-close {
+	position: absolute;
+	right: 14px;
+	top: 12px;
+	background: transparent;
+	border: none;
+	font-size: 16px;
+	color: #444;
+}
+.promo-title {
+	font-size: 18px;
+	font-weight: 700;
+	margin: 6px 0 14px 0;
+}
+.promo-form { display: block; }
+.form-group { margin-bottom: 12px; }
+.label { display:block; font-size:13px; margin-bottom:8px; color:#222; }
+.form-control {
+	width: 100%;
+	background: #f6f6f7;
+	border: 1px solid #e6e6e8;
+	padding: 10px 12px;
+	border-radius: 8px;
+	font-size: 14px;
+	color: #111;
+}
+.form-control.h-20 { height: 84px; }
+.inline-toggle { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.switch { position: relative; display: inline-block; width:44px; height:26px; }
+.switch input { opacity:0; width:0; height:0; }
+.slider {
+	position: absolute; cursor: pointer; top:0; left:0; right:0; bottom:0;
+	background: #d6d6d8; border-radius: 999px; transition: .2s;
+}
+.slider:before {
+	position: absolute; content: ""; height:20px; width:20px; left:4px; top:3px; background:white; border-radius:50%; transition:.2s; box-shadow:0 1px 3px rgba(0,0,0,0.15);
+}
+.switch input:checked + .slider { background: #0b0b0f; }
+.switch input:checked + .slider:before { transform: translateX(18px); }
+
+.products-select {
+	border: 1px solid #e8e8ea; border-radius: 8px; padding: 10px; max-height: 200px; overflow:auto; background: #fff;
+}
+.prod-row { display:flex; align-items:center; gap:10px; padding:6px 4px; }
+.prod-label { font-size:14px; color:#222; }
+
+.form-actions { display:flex; justify-content:flex-end; gap:12px; margin-top:8px; }
+.btn { padding:8px 16px; border-radius:8px; font-size:14px; }
+.btn-secondary { background: #fff; border:1px solid #e6e6e8; color:#222; }
+.btn-primary { background: #0b0b0f; color:#fff; border:none; }

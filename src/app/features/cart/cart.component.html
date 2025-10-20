@@ -1,0 +1,30 @@
+<div class="max-w-5xl mx-auto p-6">
+  <h2 class="text-2xl font-bold mb-4">Tu Carrito</h2>
+
+  <ng-container *ngIf="(items$ | async) as items; else empty">
+    <div class="bg-white border rounded-lg divide-y">
+      <div *ngFor="let item of items" class="p-4 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <img [src]="item.image" class="w-16 h-16 object-cover rounded" alt="{{item.name}}" />
+          <div>
+            <div class="font-semibold">{{ item.name }}</div>
+            <div class="text-sm text-gray-600">${{ item.price.toFixed(2) }} c/u</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <input type="number" class="border rounded px-2 py-1 w-20" [value]="item.quantity" (change)="updateQuantity(item, $any($event.target).value)" />
+          <div class="w-24 text-right font-medium">${{ (item.price * item.quantity) | number: '1.2-2' }}</div>
+          <button class="text-red-600 hover:underline" (click)="removeItem(item.productId)">Eliminar</button>
+        </div>
+      </div>
+      <div class="p-4 flex items-center justify-between">
+        <button class="text-gray-600 hover:underline" (click)="clear()">Vaciar carrito</button>
+        <div class="text-lg font-bold">Total: ${{ (total$ | async) | number: '1.2-2' }}</div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #empty>
+    <div class="bg-white border rounded p-6 text-center text-gray-600">Tu carrito está vacío.</div>
+  </ng-template>
+</div>
