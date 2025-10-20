@@ -1,15 +1,94 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+# Combined ignore rules (Angular + Node/JS projects)
 
 # Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
+dist/
+tmp/
+out-tsc/
+bazel-out/
+
+# Angular cache
+.angular/cache/
 
 # Node
-/node_modules
-npm-debug.log
-yarn-error.log
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+logs/
+*.log
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.*.json
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Instrumented libs
+lib-cov/
+
+# Coverage
+coverage/
+*.lcov
+.nyc_output/
+
+# Build tools caches
+.grunt/
+.sass-cache/
+.cache/
+.parcel-cache/
+
+# Dependency directories
+jspm_packages/
+bower_components/
+web_modules/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional caches
+.npm/
+.eslintcache
+.stylelintcache
+
+# REPL history
+.node_repl_history
+
+# Pack output
+*.tgz
+
+# Yarn v1/v3
+.yarn-integrity
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# Env files
+.env
+.env.*
+!.env.example
+
+# Framework outputs
+.next/
+out/
+.nuxt/
+.vuepress/dist/
+.temp/
+.svelte-kit/
+**/.vitepress/dist
+**/.vitepress/cache
+.docusaurus/
+.serverless/
+.fusebox/
+.dynamodb/
+.firebase/
 
 # IDEs and editors
 .idea/
@@ -26,17 +105,13 @@ yarn-error.log
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+.vscode-test/
 .history/*
-
-# Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
 
 # System files
 .DS_Store
 Thumbs.db
+
+# Vite timestamp logs
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
