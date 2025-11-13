@@ -1,8 +1,9 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
 import { User, LoginDto, AuthResponse } from '../models/user.model';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,8 @@ export class AuthService {
   // Signal para nuevo enfoque de Angular
   public isAuthenticated = signal<boolean>(false);
 
-  constructor(private router: Router) {
+  // If you provided API_BASE_URL token in appConfig, it will be injected here.
+  constructor(private router: Router, private http: HttpClient, @Inject('API_BASE_URL') private BASE_URL: string) {
     // Migrar usuarios antiguos y cargar usuario desde localStorage si existe
     this.migrateUsersStorage();
     this.loadUserFromStorage();
@@ -63,7 +65,19 @@ export class AuthService {
     localStorage.setItem('users', JSON.stringify(users));
     console.log('[AuthService.register] User persisted to localStorage');
 
-    // Auto-login: set session immediately so the app behaves like a real registration flow
+    // If a real backend is configured, forward the registration to the backend.
+    if (this.BASE_URL) {
+      try {
+        return this.http.post<AuthResponse>(`${this.BASE_URL}/auth/register`, dto).pipe(
+          tap(r => this.setSession(r))
+        );
+      } catch (e) {
+        // Fallback to mock behavior if request fails synchronously (rare)
+        console.warn('[AuthService.register] Backend call failed, falling back to mock', e);
+      }
+    }
+
+    // Fallback mock registration (no backend)
     return of(resp).pipe(
       delay(800),
       tap(r => {
@@ -74,7 +88,14 @@ export class AuthService {
   }
 
   login(credentials: LoginDto): Observable<AuthResponse> {
-    // Simular delay de API
+    // If a backend API base url is provided, call real auth endpoint
+    if (this.BASE_URL) {
+      return this.http.post<AuthResponse>(`${this.BASE_URL}/auth/login`, credentials).pipe(
+        tap(res => this.setSession(res))
+      );
+    }
+
+    // --- Mock behavior when no backend is configured ---
     // Admin shortcut
     if (credentials.username === 'admin' && credentials.password === this.MOCK_PASSWORD) {
       const response: AuthResponse = {
