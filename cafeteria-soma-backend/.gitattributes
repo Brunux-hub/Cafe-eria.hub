@@ -1,0 +1,22 @@
+# Handle line endings automatically for files detected as text
+* text=auto
+
+# These files should use Unix-style line endings (LF)
+*.java text eol=lf
+*.xml text eol=lf
+*.yml text eol=lf
+*.properties text eol=lf
+/mvnw text eol=lf
+*.sh text eol=lf
+
+# These files should use Windows-style line endings (CRLF)
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# These files are binary and should be left untouched
+*.jar binary
+*.war binary
+*.png binary
+*.jpg binary
+*.pdf binary
+*.ttf binary

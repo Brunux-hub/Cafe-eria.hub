@@ -1,0 +1,11 @@
+Para probar el backend localmente:
+
+1️⃣ Crea una base de datos vacía llamada cafeteria_soma en MySQL.
+   CREATE DATABASE cafeteria_soma;
+
+2️⃣ Configura tu usuario y contraseña en application.properties.
+
+3️⃣ Ejecuta el proyecto con:
+   mvn spring-boot:run
+
+4️⃣ Las tablas se crearán automáticamente (no se necesita script).

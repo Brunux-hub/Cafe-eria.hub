@@ -1,0 +1,51 @@
+# Render Blueprint para Cafetería Soma
+# https://render.com/docs/blueprint-spec
+
+services:
+  # 🗄️ Base de datos MySQL
+  - type: pserv
+    name: cafeteria-mysql
+    env: docker
+    dockerfilePath: ./docker/mysql.Dockerfile
+    envVars:
+      - key: MYSQL_ROOT_PASSWORD
+        generateValue: true
+      - key: MYSQL_DATABASE
+        value: cafeteria_soma
+    disk:
+      name: mysql-data
+      mountPath: /var/lib/mysql
+      sizeGB: 10
+
+  # ☕ Backend Spring Boot
+  - type: web
+    name: cafeteria-backend
+    env: docker
+    dockerfilePath: ./cafeteria-soma-backend/Dockerfile
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:mysql://cafeteria-mysql:3306/cafeteria_soma?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
+      - key: SPRING_DATASOURCE_USERNAME
+        value: root
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromService:
+          type: pserv
+          name: cafeteria-mysql
+          envVarKey: MYSQL_ROOT_PASSWORD
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRATION
+        value: 86400000
+    healthCheckPath: /actuator/health
+
+  # 🎨 Frontend Angular
+  - type: web
+    name: cafeteria-frontend
+    env: docker
+    dockerfilePath: ./cafeteria-soma/Dockerfile
+    envVars:
+      - key: API_URL
+        fromService:
+          type: web
+          name: cafeteria-backend
+          property: url

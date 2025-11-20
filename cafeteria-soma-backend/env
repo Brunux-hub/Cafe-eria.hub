@@ -1,0 +1,24 @@
+# Configuración de base de datos
+DB_URL=jdbc:mysql://localhost:3306/cafeteria_soma?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
+DB_USERNAME=root
+DB_PASSWORD=123456
+
+# Configuración JWT
+JWT_SECRET=5B41236D7A5B41236D7A5B41236D7A5B41236D7A5B41236D7A5B41236D7A5B41236D7A5B41236D
+
+# Puerto del servidor
+SERVER_PORT=8080
+
+# Configuración de email
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=alexanderjosef31@gmail.com
+MAIL_PASSWORD=smesdolsxebrmfkp
+MAIL_SMTP_AUTH=true
+MAIL_STARTTLS_ENABLE=true
+
+# Configuración adicional de email
+MAIL_TRANSPORT_PROTOCOL=smtp
+MAIL_SMTP_STARTTLS_REQUIRED=true
+MAIL_DEBUG=true
+

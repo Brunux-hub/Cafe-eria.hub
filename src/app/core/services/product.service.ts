@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, Optional } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
+import { delay, map, tap, catchError } from 'rxjs/operators';
 import { Product, CreateProductDto, UpdateProductDto } from '../models/product.model';
 
 @Injectable({
@@ -86,11 +87,46 @@ export class ProductService {
   private productsSubject = new BehaviorSubject<Product[]>(this.mockProducts);
   public products$ = this.productsSubject.asObservable();
 
-  constructor() {}
+  constructor(
+    private http: HttpClient,
+    @Optional() @Inject('API_BASE_URL') private apiUrl?: string
+  ) {}
 
   // Obtener todos los productos
   getProducts(): Observable<Product[]> {
+    if (this.apiUrl) {
+      return this.http.get<any[]>(`${this.apiUrl}/productos`).pipe(
+        map(products => products.map(p => this.mapBackendProduct(p))),
+        tap(products => {
+          this.mockProducts = products;
+          this.productsSubject.next(products);
+        }),
+        catchError(() => {
+          // Fallback a mock si falla
+          return of(this.mockProducts).pipe(delay(500));
+        })
+      );
+    }
     return of(this.mockProducts).pipe(delay(500));
+  }
+
+  private mapBackendProduct(backend: any): Product {
+    return {
+      id: backend.id?.toString() || backend.idProducto?.toString(),
+      name: backend.name || backend.nombre,
+      description: backend.description || backend.descripcion,
+      category: backend.category || this.getCategoryName(backend.categoria),
+      price: typeof backend.price === 'number' ? backend.price : parseFloat(backend.precio),
+      stock: backend.stock,
+      image: backend.image || backend.imagenUrl || 'assets/images/default.svg',
+      isActive: backend.isActive !== undefined ? backend.isActive : backend.activo,
+      createdAt: backend.createdAt ? new Date(backend.createdAt) : new Date(backend.fechaCreacion),
+      updatedAt: backend.updatedAt ? new Date(backend.updatedAt) : new Date(backend.fechaActualizacion)
+    };
+  }
+
+  private getCategoryName(categoria: any): string {
+    return categoria?.nombre || 'Sin categoría';
   }
 
   // Obtener producto por ID
@@ -104,6 +140,17 @@ export class ProductService {
 
   // Crear producto
   createProduct(dto: CreateProductDto): Observable<Product> {
+    if (this.apiUrl) {
+      return this.http.post<any>(`${this.apiUrl}/productos`, dto).pipe(
+        map(p => this.mapBackendProduct(p)),
+        tap(product => {
+          this.mockProducts.push(product);
+          this.productsSubject.next([...this.mockProducts]);
+        })
+      );
+    }
+
+    // Fallback mock
     const newProduct: Product = {
       id: Date.now().toString(),
       name: dto.name,
@@ -125,6 +172,20 @@ export class ProductService {
 
   // Actualizar producto
   updateProduct(dto: UpdateProductDto): Observable<Product> {
+    if (this.apiUrl && dto.id) {
+      return this.http.put<any>(`${this.apiUrl}/productos/${dto.id}`, dto).pipe(
+        map(p => this.mapBackendProduct(p)),
+        tap(updatedProduct => {
+          const index = this.mockProducts.findIndex(p => p.id === dto.id);
+          if (index !== -1) {
+            this.mockProducts[index] = updatedProduct;
+            this.productsSubject.next([...this.mockProducts]);
+          }
+        })
+      );
+    }
+
+    // Fallback mock
     const index = this.mockProducts.findIndex(p => p.id === dto.id);
     
     if (index === -1) {
