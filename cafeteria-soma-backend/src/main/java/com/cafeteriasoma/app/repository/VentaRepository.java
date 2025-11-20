@@ -1,5 +1,6 @@
 package com.cafeteriasoma.app.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,4 +13,10 @@ import com.cafeteriasoma.app.entity.Venta;
 public interface VentaRepository extends JpaRepository<Venta, Long> {
 
     List<Venta> findByUsuario(Usuario usuario);
+    
+    List<Venta> findByUsuarioIdUsuarioOrderByFechaCreacionDesc(Long usuarioId);
+    
+    List<Venta> findByFechaCreacionBetween(LocalDateTime fechaInicio, LocalDateTime fechaFin);
+    
+    List<Venta> findTop10ByOrderByFechaCreacionDesc();
 }

@@ -89,13 +89,21 @@ export class AuthService {
   }
 
   login(credentials: LoginDto): Observable<AuthResponse> {
+    console.log('[AuthService.login] Attempting login with:', credentials.username);
+    console.log('[AuthService.login] BASE_URL configured:', this.BASE_URL);
+    
     // If a backend API base url is provided, call real auth endpoint
     if (this.BASE_URL) {
+      console.log('[AuthService.login] Using real backend at:', `${this.BASE_URL}/auth/login`);
       return this.http.post<AuthResponse>(`${this.BASE_URL}/auth/login`, credentials).pipe(
-        tap(res => this.setSession(res))
+        tap(res => {
+          console.log('[AuthService.login] Backend response received:', res);
+          this.setSession(res);
+        })
       );
     }
 
+    console.log('[AuthService.login] No BASE_URL, using mock authentication');
     // --- Mock behavior when no backend is configured ---
     // Admin shortcut
     if (credentials.username === 'admin' && credentials.password === this.MOCK_PASSWORD) {
