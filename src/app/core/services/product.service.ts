@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { delay, map, tap, catchError } from 'rxjs/operators';
 import { Product, CreateProductDto, UpdateProductDto } from '../models/product.model';
+import { API_BASE_URL } from '../../app.config';
 
 @Injectable({
   providedIn: 'root'
@@ -89,7 +90,7 @@ export class ProductService {
 
   constructor(
     private http: HttpClient,
-    @Optional() @Inject('API_BASE_URL') private apiUrl?: string
+    @Optional() @Inject(API_BASE_URL) private apiUrl?: string
   ) {}
 
   // Obtener todos los productos

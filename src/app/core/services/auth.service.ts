@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
 import { User, LoginDto, AuthResponse } from '../models/user.model';
 import { HttpClient } from '@angular/common/http';
+import { API_BASE_URL } from '../../app.config';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +29,7 @@ export class AuthService {
   public isAuthenticated = signal<boolean>(false);
 
   // If you provided API_BASE_URL token in appConfig, it will be injected here.
-  constructor(private router: Router, private http: HttpClient, @Inject('API_BASE_URL') private BASE_URL: string) {
+  constructor(private router: Router, private http: HttpClient, @Inject(API_BASE_URL) private BASE_URL: string) {
     // Migrar usuarios antiguos y cargar usuario desde localStorage si existe
     this.migrateUsersStorage();
     this.loadUserFromStorage();
