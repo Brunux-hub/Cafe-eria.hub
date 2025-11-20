@@ -50,13 +50,23 @@ public class AuthService {
      */
     @Transactional(readOnly = true)
     public AuthResponse login(LoginRequest request) {
-        // Autenticar con Spring Security
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername().toLowerCase(),
-                        request.getPassword()
-                )
-        );
+        System.out.println("========== AuthService.login ==========");
+        System.out.println("Username recibido: " + request.getUsername());
+        System.out.println("Username lowercase: " + request.getUsername().toLowerCase());
+        
+        try {
+            // Autenticar con Spring Security
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername().toLowerCase(),
+                            request.getPassword()
+                    )
+            );
+            System.out.println("Autenticación exitosa con AuthenticationManager");
+        } catch (Exception e) {
+            System.err.println("ERROR en autenticación: " + e.getMessage());
+            throw e;
+        }
 
         // Cargar usuario desde la BD
         Usuario usuario = usuarioRepository.findByCorreo(request.getUsername().toLowerCase())

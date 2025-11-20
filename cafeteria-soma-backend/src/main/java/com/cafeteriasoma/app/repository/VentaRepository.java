@@ -14,9 +14,9 @@ public interface VentaRepository extends JpaRepository<Venta, Long> {
 
     List<Venta> findByUsuario(Usuario usuario);
     
-    List<Venta> findByUsuarioIdUsuarioOrderByFechaCreacionDesc(Long usuarioId);
+    List<Venta> findByUsuarioIdUsuarioOrderByFechaVentaDesc(Long usuarioId);
     
-    List<Venta> findByFechaCreacionBetween(LocalDateTime fechaInicio, LocalDateTime fechaFin);
+    List<Venta> findByFechaVentaBetween(LocalDateTime fechaInicio, LocalDateTime fechaFin);
     
-    List<Venta> findTop10ByOrderByFechaCreacionDesc();
+    List<Venta> findTop10ByOrderByFechaVentaDesc();
 }

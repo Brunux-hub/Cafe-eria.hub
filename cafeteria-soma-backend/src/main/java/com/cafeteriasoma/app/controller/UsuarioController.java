@@ -116,8 +116,6 @@ public class UsuarioController {
                 .map(existing -> {
                     existing.setNombre(usuario.getNombre());
                     existing.setCorreo(usuario.getCorreo());
-                    existing.setTelefono(usuario.getTelefono());
-                    existing.setDireccion(usuario.getDireccion());
                     existing.setActivo(usuario.getActivo());
                     
                     // Solo actualizar contraseña si se proporciona una nueva

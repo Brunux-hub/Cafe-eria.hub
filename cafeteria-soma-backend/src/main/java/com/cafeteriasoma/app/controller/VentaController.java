@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -77,7 +78,7 @@ public class VentaController {
      */
     @GetMapping("/usuario/{usuarioId}")
     public ResponseEntity<List<Venta>> getVentasByUsuario(@PathVariable Long usuarioId) {
-        List<Venta> ventas = ventaRepository.findByUsuarioIdUsuarioOrderByFechaCreacionDesc(usuarioId);
+        List<Venta> ventas = ventaRepository.findByUsuarioIdUsuarioOrderByFechaVentaDesc(usuarioId);
         return ResponseEntity.ok(ventas);
     }
 
@@ -91,12 +92,12 @@ public class VentaController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaInicio,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaFin) {
         
-        List<Venta> ventas = ventaRepository.findByFechaCreacionBetween(fechaInicio, fechaFin);
+        List<Venta> ventas = ventaRepository.findByFechaVentaBetween(fechaInicio, fechaFin);
         
         // Calcular total de ventas en el rango
-        Double totalVentas = ventas.stream()
-                .mapToDouble(Venta::getTotal)
-                .sum();
+        BigDecimal totalVentas = ventas.stream()
+                .map(Venta::getTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         
         Map<String, Object> response = new HashMap<>();
         response.put("ventas", ventas);
@@ -114,7 +115,7 @@ public class VentaController {
     public ResponseEntity<?> createVenta(@RequestBody Venta venta) {
         try {
             // Validaciones básicas
-            if (venta.getTotal() == null || venta.getTotal() <= 0) {
+            if (venta.getTotal() == null || venta.getTotal().compareTo(BigDecimal.ZERO) <= 0) {
                 return ResponseEntity.badRequest()
                         .body(Map.of("error", "El total de la venta debe ser mayor a 0"));
             }
@@ -131,7 +132,7 @@ public class VentaController {
             webSocketController.notifyNewSale(
                     savedVenta.getIdVenta(),
                     savedVenta.getUsuario().getCorreo(),
-                    savedVenta.getTotal()
+                    savedVenta.getTotal().doubleValue()
             );
             
             return ResponseEntity.status(HttpStatus.CREATED).body(savedVenta);
@@ -151,16 +152,17 @@ public class VentaController {
         LocalDateTime inicioHoy = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
         LocalDateTime finHoy = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);
         
-        List<Venta> ventasHoy = ventaRepository.findByFechaCreacionBetween(inicioHoy, finHoy);
+        List<Venta> ventasHoy = ventaRepository.findByFechaVentaBetween(inicioHoy, finHoy);
         
-        Double totalVentas = ventasHoy.stream()
-                .mapToDouble(Venta::getTotal)
-                .sum();
+        BigDecimal totalVentas = ventasHoy.stream()
+                .map(Venta::getTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         
         Map<String, Object> estadisticas = new HashMap<>();
         estadisticas.put("cantidadVentas", ventasHoy.size());
         estadisticas.put("totalVentas", totalVentas);
-        estadisticas.put("promedioVenta", ventasHoy.isEmpty() ? 0 : totalVentas / ventasHoy.size());
+        estadisticas.put("promedioVenta", ventasHoy.isEmpty() ? BigDecimal.ZERO : 
+                totalVentas.divide(BigDecimal.valueOf(ventasHoy.size()), 2, java.math.RoundingMode.HALF_UP));
         estadisticas.put("fecha", LocalDateTime.now());
         
         return ResponseEntity.ok(estadisticas);
@@ -176,16 +178,17 @@ public class VentaController {
         LocalDateTime inicioMes = LocalDateTime.now().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
         LocalDateTime finMes = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);
         
-        List<Venta> ventasMes = ventaRepository.findByFechaCreacionBetween(inicioMes, finMes);
+        List<Venta> ventasMes = ventaRepository.findByFechaVentaBetween(inicioMes, finMes);
         
-        Double totalVentas = ventasMes.stream()
-                .mapToDouble(Venta::getTotal)
-                .sum();
+        BigDecimal totalVentas = ventasMes.stream()
+                .map(Venta::getTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         
         Map<String, Object> estadisticas = new HashMap<>();
         estadisticas.put("cantidadVentas", ventasMes.size());
         estadisticas.put("totalVentas", totalVentas);
-        estadisticas.put("promedioVenta", ventasMes.isEmpty() ? 0 : totalVentas / ventasMes.size());
+        estadisticas.put("promedioVenta", ventasMes.isEmpty() ? BigDecimal.ZERO : 
+                totalVentas.divide(BigDecimal.valueOf(ventasMes.size()), 2, java.math.RoundingMode.HALF_UP));
         estadisticas.put("mes", LocalDateTime.now().getMonth());
         estadisticas.put("anio", LocalDateTime.now().getYear());
         
