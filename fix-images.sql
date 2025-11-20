@@ -12,6 +12,14 @@ UPDATE producto SET imagen_url = 'https://via.placeholder.com/150/DEB887/000000?
 UPDATE producto SET imagen_url = 'https://via.placeholder.com/150/90EE90/000000?text=Te+Verde' WHERE nombre LIKE 'T%Verde%';
 UPDATE producto SET imagen_url = 'https://via.placeholder.com/150/2F4F4F/FFFFFF?text=Te+Negro' WHERE nombre LIKE 'T%Negro%';
 UPDATE producto SET imagen_url = 'https://via.placeholder.com/150/8B4513/FFFFFF?text=Chocolate' WHERE nombre LIKE '%Chocolate%';
+UPDATE producto SET imagen_url = 'https://via.placeholder.com/150/8B4513/FFFFFF?text=Brownie' WHERE nombre = 'Brownie';
+UPDATE producto SET imagen_url = 'https://via.placeholder.com/150/FFD700/000000?text=Croissant' WHERE nombre = 'Croissant';
+UPDATE producto SET imagen_url = 'https://via.placeholder.com/150/F4A460/FFFFFF?text=Sandwich' WHERE nombre LIKE '%ndwich%';
+UPDATE producto SET imagen_url = 'https://via.placeholder.com/150/9ACD32/FFFFFF?text=Wrap' WHERE nombre LIKE '%Wrap%';
+
+-- Actualizar todos los que tengan rutas locales
+UPDATE producto SET imagen_url = CONCAT('https://via.placeholder.com/150/CCCCCC/000000?text=', REPLACE(nombre, ' ', '+')) 
+WHERE imagen_url LIKE '%assets%' OR imagen_url LIKE 'http://localhost%';
 
 -- Verificar las actualizaciones
-SELECT id_producto, nombre, imagen_url FROM producto LIMIT 15;
+SELECT id_producto, nombre, imagen_url FROM producto;
