@@ -41,8 +41,12 @@ public class AuthService {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
+    @Autowired
+    private SessionService sessionService;
+
     /**
      * Autentica al usuario y devuelve un token JWT.
+     * Almacena el token en Redis para validación de sesión.
      */
     @Transactional(readOnly = true)
     public AuthResponse login(LoginRequest request) {
@@ -58,6 +62,11 @@ public class AuthService {
         Usuario usuario = usuarioRepository.findByCorreo(request.getUsername().toLowerCase())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
+        // Validar que el usuario esté activo
+        if (!usuario.getActivo()) {
+            throw new RuntimeException("Usuario inactivo. Contacte al administrador.");
+        }
+
         // Generar token JWT con claims adicionales
         UserDetails userDetails = userDetailsService.loadUserByUsername(usuario.getCorreo());
         Map<String, Object> claims = new HashMap<>();
@@ -66,12 +75,27 @@ public class AuthService {
         
         String token = jwtUtil.generateToken(userDetails, claims);
 
+        // Almacenar token en Redis
+        sessionService.storeToken(usuario.getCorreo(), token);
+        
+        // Almacenar información adicional de sesión
+        sessionService.storeSessionData(usuario.getCorreo(), "lastLogin", java.time.LocalDateTime.now().toString());
+        sessionService.storeSessionData(usuario.getCorreo(), "role", usuario.getRol().getNombre());
+
         // Construir respuesta
         UserDto userDto = mapToUserDto(usuario);
         return AuthResponse.builder()
                 .user(userDto)
                 .token(token)
                 .build();
+    }
+
+    /**
+     * Cierra la sesión del usuario invalidando el token en Redis.
+     */
+    @Transactional(readOnly = true)
+    public void logout(String username) {
+        sessionService.invalidateToken(username);
     }
 
     /**
